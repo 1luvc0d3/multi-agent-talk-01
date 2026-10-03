@@ -53,7 +53,7 @@ def main() -> None:
         print(f"\n=== draft {round_number} ===\n{draft}")
 
         critique = ask(CRITIC, f"Question: {question}\n\nDraft:\n{draft}")
-        if critique.startswith("APPROVED"):
+        if "APPROVED" in critique:
             print(f"\n=== approved on round {round_number} ===")
             break
 
