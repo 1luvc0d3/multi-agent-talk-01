@@ -8,16 +8,54 @@ isn't the person who wrote the code.
 
 ## Run it
 
+Everything runs on your own laptop: no account, no API key, no cost. You need git,
+Python 3.9 or newer, and about 4 GB of free disk space for the model.
+
+### 1. Install Ollama and download the model
+
+Ollama runs open models locally. Install it from <https://ollama.com/download>
+(macOS with Homebrew: `brew install ollama`), then:
+
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate    # Windows: .venv\Scripts\activate
+ollama serve          # leave this running in a second terminal; skip if the Ollama app is open
+ollama pull gemma3    # Google's open Gemma model, one-time 3.3 GB download
+```
+
+### 2. Get the code
+
+```bash
+git clone https://github.com/1luvc0d3/multi-agent-talk-01
+cd multi-agent-talk-01
+python3 -m venv .venv            # Windows: python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install openai python-dotenv
-cp .env.example .env         # then put your key in .env
+cp .env.example .env             # Windows cmd: copy .env.example .env
+```
+
+`.env` is already set up for Ollama and Gemma, so there is nothing to edit.
+
+### 3. Run it
+
+```bash
 python writer_critic.py "Explain TCP congestion control to a first-year student"
 ```
 
-Works with any OpenAI-compatible endpoint — OpenAI, Gemma, Groq, or Ollama on your own
-laptop. `.env.example` has the settings for each.
+You should see `=== draft 1 ===`, possibly a critique and more drafts, then either
+`=== approved on round N ===` or `=== stopped after 3 rounds without approval ===`, and
+finally `=== final ===`.
+
+### If it fails
+
+- `KeyError: 'API_KEY'`: there is no `.env` file next to `writer_critic.py`. Redo the last line of step 2.
+- `Connection error`: Ollama isn't running. Start `ollama serve` and try again.
+- `model 'gemma3' not found`: run `ollama pull gemma3`.
+
+### Optional: use a hosted model instead
+
+The same code works with any OpenAI-compatible endpoint, such as OpenAI, Google or Groq.
+These need an account and an API key, and some charge per request. Put your key in
+`API_KEY` in `.env`, and set `BASE_URL` and `MODEL` to the pair listed for your provider in
+the comments at the top of that file.
 
 ## The part that matters
 
